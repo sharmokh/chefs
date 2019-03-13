@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chefs 4 Me</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+    <script src="/js/jquery.js" type="text/javascript" ></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/ie10-viewport-bug-workaround.js"></script>
+    <style>
+        body {padding-top: 75px}
+        .thumbnail {padding: 25px}
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Chefs 4 Me</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/chefs">Local Chefs</a></li>
+                    <li><a href="/inbox">Inbox</a></li>
+                    <li><a href="/preview">My Menu</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/logout">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="wrap" class="container">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <br><br>
+            <h2>Thank you for your Order!</h2>
+            <br><br><br>
+            <p>We sent Chef {{chef.last_name}} a message.  You shoould be hearing from the chef shortly.  If the chef accepts your request and does not need to include the cost of food, you will be charged automatically.  If the chef needs to change the date or time, you will receive a message with the proposed new date or time.  You will not be charged unless you accept the proposed new date or time.  If the chef needs to include the cost of food, you will receive a message with the total price including the cost of the food.  You will not be charged until you approve the total price.  Thank you and enjoy the meal!</p>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <p>© 2015 4 Me Services · <a href="#">Terms</a></p>
+        </div>
+    </div>
+</body>

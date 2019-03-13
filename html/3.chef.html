@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chefs 4 Me</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+    <script src="/js/jquery.js" type="text/javascript" ></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+    <style>
+        body {padding-top: 75px}
+        .thumbnail {padding: 25px}
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Chefs 4 Me</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/chefs">Local Chefs</a></li>
+                    <li><a href="/inbox">Inbox</a></li>
+                    <li class="dropdown active">
+                        <a href="/preview" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">My Menu<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/preview">Preview</a></li>
+                            <li><a href="/chef">Chef Profile</a></li>
+                            <li><a href="/menu">Edit Menu</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/logout">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="wrap" class="container">
+        <form enctype="multipart/form-data" id="profile" method="post">
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <img class="img-circle col-md-12 col-xs-12" src="/img?img_id={{chef.key.urlsafe()}}" alt="Profile Picture">
+                    </div>
+                    <div >
+                        <strong>Upload New Photo</strong>
+                        <input type="file" id="photo" class="form-control" name="photo" accept="image/*">
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <h2 class="text-center">Chef {{chef.last_name}}'s Profile</h2>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Years of Experience</strong>
+                        </div>
+                        <div class="form-group has-feedback col-md-2">
+                            <div id="experience2">
+                                <input type="text" class="form-control" id="experience" name="experience" value="{{chef.experience}}">
+                                <span class="glyphicon form-control-feedback" id="experience1"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-2">
+                            <strong>Day Rate</strong>
+                        </div>
+                        <div class="form-group has-feedback col-md-2">
+                            <div id="day2">
+                                <input type="text" class="form-control" id="day" name="day" value="{{chef.day}}">
+                                <span class="glyphicon form-control-feedback" id="day1"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <strong>Culinary School</strong>
+                        </div>
+                        <div class="form-group has-feedback col-md-3">
+                            <div id="school2">
+                                <input type="text" class="form-control" id="school" name="school" value="{{chef.school}}">
+                                <span class="glyphicon form-control-feedback" id="school1"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-2">
+                            <strong>Hour Rate</strong>
+                        </div>
+                        <div class="form-group has-feedback col-md-2">
+                            <div id="hour2">
+                                <input type="text" class="form-control" id="hour" name="hour" value="{{chef.hour}}">
+                                <span class="glyphicon form-control-feedback" id="hour1"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p class="col-md-12"><strong>Chef Profile Description</strong></p>
+                        <div class="form-group has-feedback col-md-12">
+                            <div id="description2">
+                                <textarea class="form-control" id="description" name="description" rows="3" style="resize:none">{{chef.description}}</textarea>
+                                <span class="glyphicon form-control-feedback" id="description1"></span>
+                            </div>
+                        </div>                    
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input type="checkbox" id="use_phone" name="breakfast"> Breakfast
+                        </div>
+                        <div class="col-md-2">
+                            <input type="checkbox" id="use_phone" name="lunch"> Lunch
+                        </div>
+                        <div class="col-md-2">
+                            <input type="checkbox" id="use_phone" name="dinner"> Dinner
+                        </div>
+                        <div class="col-md-2">
+                            <input type="checkbox" id="use_phone" name="allday"> All Day
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div>
+                                <input type="checkbox" name="rate">
+                                Charge Clients by Hour/Day Rate (Option for charging the purchase of groceries)
+                            </div>
+                            <div>
+                                <input type="checkbox" name="orders">
+                                Charge Clients by Menu Orders (Not hourly/daily rate)
+                            </div>
+                            <div class="col-md-12">
+                                <input type="checkbox" name="delivery"> Drop Off Food
+                            </div>
+                            <div class="col-md-12">
+                                <input type="checkbox" name="home"> Cook at Client's Home   
+                            </div>
+                            <div class="col-md-12">
+                                <input type="checkbox" name="teach"> Teach Client to Cook
+                            </div>
+                            <div>
+                            *Clients will be charged an extra 15% for cooking at their home given directly to the chef and an extra 40% (30% to chef, 10% to Cook4Me) for learning to cook.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Select Cuisines</strong>
+                            <select name="cuisines" multiple="multiple" class="form-control" style="height:130px">
+                                <option value="African">African</option>
+                                <option value="American">American</option>
+                                <option value="Asian">Asain</option>
+                                <option value="Baking">Baking</option>
+                                <option value="Carribean">Carribean</option>
+                                <option value="European">European</option>
+                                <option value="Fusion">Fusion</option>
+                                <option value="Gluton-Free">Gluton-Free</option>
+                                <option value="Kolsher">Kolsher</option>
+                                <option value="Indian">Indian</option>
+                                <option value="Italian">Italian</option>
+                                <option value="Mediterranean">Mediterranean</option>
+                                <option value="Mexican">Mexican</option>
+                                <option value="Paleo">Paleo</option>
+                                <option value="South American">South American</option>
+                                <option value="Vegan">Vegan</option>
+                                <option value="Vegetarian">Vegetarian</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <strong>Distance willing to travel in miles</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group has-feedback">
+                                <div id="radius2">
+                                    <input type="text" class="form-control" name="raidus" value="{{chef.radius}}">
+                                    <span class="glyphicon form-control-feedback" id="radius1"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="checkbox" id="use_phone" name="use_phone"><strong>Use Profile Cell Number</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="checkbox" id="use_address" name="use_address"><strong>Use Profile Address</strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <strong>Work Phone</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group has-feedback">
+                                <div class="input-group" id="phone2">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                                    <input type="tel" id="phone" class="form-control" name="phone" placeholder="xxx-xxx-xxxx" value="{{chef.number}}">
+                                    <span id="phone_verified" class="input-group-addon hide">
+                                        <span class="glyphicon glyphicon-ok"> Verified </span>
+                                    </span>
+                                    <span class="glyphicon form-control-feedback" id="phone1"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group has-feedback">
+                                <div id="text2">
+                                    <input type="checkbox" name="text">
+                                    <strong>Enable Text Message</strong>
+                                    <span class="glyphicon form-control-feedback" id="text1"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <strong>Work Address</strong>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group has-feedback">
+                                <div class="input-group" id="street2">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                    <input type="text" id="street" class="form-control" name="street" placeholder="Steet" value="{{chef.address.street}}">
+                                    <span class="glyphicon form-control-feedback" id="street1"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <strong>City</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group has-feedback">
+                                <div id="city2">
+                                    <input type="text" id="city" class="form-control" name="city" placeholder="City" value="{{chef.address.city}}">
+                                    <span class="glyphicon form-control-feedback" id="city1"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <strong>State</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group has-feedback">
+                                <div id="state2">
+                                    <input type="text" id="state" class="form-control" name="state" placeholder="ST"  value="{{chef.address.state}}">
+                                    <span class="glyphicon form-control-feedback" id="state1"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <strong>Zipcode</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group has-feedback">
+                                <div id="zipcode2">
+                                    <input type="text" id="zipcode" class="form-control" name="zipcode" placeholder="XXXXX" value="{{chef.address.zipcode}}">
+                                    <span class="glyphicon form-control-feedback" id="zipcode1"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center">
+                        <input class="btn btn-lg btn-primary" type="submit" id="submit" value="Update Chef Profile">
+                    </p> 
+                </div>
+        </form>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <p>© 2015 4 Me Services · <a href="#">Terms</a></p>
+        </div>
+    </div>
+    <script>
+        if ('{{chef.rate}}' == 'True') {$('input[name="rate"]').prop('checked', true)}
+        if ('{{chef.orders}}' == 'True') {$('input[name="orders"]').prop('checked', true)}
+        if ('{{chef.delivery}}' == 'True') {$('input[name="delivery"]').prop('checked', true)}
+        if ('{{chef.athome}}' == 'True') {$('input[name="home"]').prop('checked', true)}
+        if ('{{chef.teach}}' == 'True') {$('input[name="teach"]').prop('checked', true)}
+        if ('{{chef.text}}' == 'True') {$('input[name="text"]').prop('checked', true)}
+        {% for cuisine in chef.cuisines %}
+            $('option[value="{{cuisine}}"]').attr('selected', true);
+        {% endfor %}
+        $(function(){
+            $('#use_phone').click(function() {
+                if ($(this).prop('checked')) {
+                    $('#phone').val('{{phone}}');
+                }
+            });
+            $('#use_address').click(function() {
+                if ($(this).prop('checked')) {
+                    $('#street').val('{{address.street}}');
+                    $('#city').val('{{address.city}}');
+                    $('#state').val('{{address.state}}');
+                    $('#zipcode').val('{{address.zipcode}}');
+                }
+            });
+        });
+    </script>
+</body>

@@ -1,0 +1,9 @@
+Welcome {{first_name}},
+
+Thank you for joining Chefs 4 Me! Please confirm your email address by signing in and using the link and activation code below.
+
+http://www.chefs4me.com/activate
+Activation Code: {{activate}}
+
+Thank you,
+Chefs4Me Support Team

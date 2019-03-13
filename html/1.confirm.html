@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chefs 4 Me</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+    <script src="/js/jquery.js" type="text/javascript" ></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+    <style>
+        body {padding-top: 75px}
+        .thumbnail {padding: 25px}
+        .i {font-style: italic; font-weight: bold;}
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Chefs 4 Me</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/chefs">Local Chefs</a></li>
+                    <li><a href="/inbox">Inbox</a></li>
+                    <li><a href="/preview">My Menu</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/logout">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="wrap" class="container">
+        <div class="col-md-2"></div>
+        <div class="thumbnail col-md-8">
+        <form enctype="multipart/form-data" id="order" method="post">
+            <input name="job_id" value="{{job.key.id()}}" class="hide">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Proposed Date and Time:</h4>
+                    <h3>{{job.propose.strftime('%A %B %d, %Y @ %I:%M %p')}}</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                {% if job.how == 'day' %}
+                    You have booked Chef {{chef.last_name}} for the <span class="i">day (8 hours)</span>.  
+                    You plan on feeding <span class="i">{{job.guests}}</span> guests and would like 
+                    {% if job.purchase == 'chef' %}
+                        <span class="i">the chef to purchase the ingrediants</span>.
+                    {% elif job.purchase == 'me' %}
+                        <span class="i">to purchase the ingrediants yourself</span>.
+                    {% endif %}
+                    Please confirm the <span class="i">date</span> and <span class="i">time</span> above 
+                    and your <span class="i">menu item(s)</span> and <span class="i">address</span> are correct below.  Thank you!
+                {% elif job.how == 'hour' %}
+                    You are booking Chef {{chef.last_name}} for <span class="i">{{job.hours}} hour(s)</span>.  
+                    You plan on feeding <span class="i">{{job.guests}} guests</span> and would like
+                    {% if job.purchase == 'chef' %}
+                        <span class="i">the chef to purchase the ingrediants</span>.
+                    {% elif job.purchase == 'me' %}
+                        <span class="i">to purchase the ingrediants yourself</span>.
+                    {% endif %}
+                    Please confirm the <span class="i">date</span> and <span class="i">time</span> above 
+                    and your <span class="i">menu item(s)</span> and <span class="i">address</span> are correct below.  Thank you!
+                {% elif job.how == 'byitem' %}
+                    You are booking Chef {{chef.last_name}} 
+                    {% if job.purchase == 'home' %}
+                        <span class="i">to cook for you at home</span>.
+                    {% elif job.purchase == 'delivery' %}
+                        <span class="i">to cook and delivery food to your home</span>.
+                    {% elif job.purchase == 'teach' %}
+                        <span class="i">to teach you to cook</span>.
+                    {% endif %}
+                    Please confirm the <span class="i">date</span> and <span class="i">time</span> above 
+                    and your <span class="i">menu item(s)</span> and <span class="i">address</span> are correct below.  Thank you!                
+                {% endif %}
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                {% for item in items %}
+                <div class="row" id="{{item.key.id()}}">
+                    <div class="col-md-3">
+                        <div class="text-center" style="margin:8px">
+                            <img class="img-circle col-xs-12 col-md-12" src="/img?img_id={{item.key.urlsafe()}}">
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <h4>
+                            {{item.title}}
+                            <span class="price_serving" style="float:right">${{item.price}}</span>
+                        </h4>
+                        <h5>
+                            {{item.category}} Cuisine 
+                            <span class="hide">Rating</span>
+                            <span class="price_serving" style="float:right">Serves: {{item.serving}}</span>
+                        </h5>
+                        <p style="height:60px;overflow:auto">{{item.ingredients}}<p>
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <iframe width="100%" height="275" style="border:0" src="https://www.google.com/maps/embed/v1/place?q={{job.address.street}}+{{job.address.city}}+{{job.address.state}}United%20States&key=AIzaSyAg1Z4WTSTX3dyXXSaq5tIaqOqUU04DSZI"></iframe>
+                </div>
+                <div class="col-md-6">
+                    <h4>{{user.first_name}} {{user.last_name}}</h4>
+                    Phone Number: {{job.phone}}<br>
+                    Address: {{job.address.type}} <br>
+                    {{job.address.street}}<br>
+                    {{job.address.city}}, {{job.address.state}} {{job.address.zipcode}}<br>
+                    <hr>
+                    <h4>Payment upon Chef Confirmation</h4>
+                    <table id="bill">
+                        <tr>
+                            <td class="type">Chef Price:</td>
+                            <td class="price">${{job.price}}</td>
+                        </tr>
+                        {% if job.purchase == 'chef' %}
+                        <tr>
+                            <td class="type">Food Cost:</td>
+                            <td class="price">TBD*</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td class="type">Service Fee:</td>
+                            <td class="price">${{job.fee}}</td>
+                        </tr>
+                        <tr>
+                            <td class="type">Total:</td>
+                            <td class="price">${{job.total}}</td>
+                        </tr>
+                    </table>
+                    {% if job.purchase == 'chef' %}
+                        *To be determine when chef reviews order.
+                    {% endif %}
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <p><strong>Customize chosen dishes, special consideration or other information important for the chef to know:</strong></p>
+                    <div class="form-group has-feedback">
+                        <div id="description2">
+                            <textarea class="form-control" id="custom" name="custom" rows="3" style="resize:none">{{job.custom}}</textarea>
+                            <span class="glyphicon form-control-feedback" id="description1"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-right">
+                <a id="start" href="/order?chef={{chef.key.id()}}" style="margin-right:25px">Start Over</a>
+                <input class="btn btn-md btn-primary" type="submit" value="Submit Order">
+            </p>
+        </form>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <p>© 2015 4 Me Services · <a href="#">Terms</a></p>
+        </div>
+    </div>
+    <script>
+        if ('{{job.how}}' == 'hour' || '{{job.how}}' == 'day')  {
+            $('.price_serving').addClass('hide')
+        }          
+    </script>
+</body>

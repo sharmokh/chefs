@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chefs 4 Me</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+    <script src="/js/jquery.js" type="text/javascript" ></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+    <style>
+        body {padding-top: 75px}
+        .thumbnail {padding: 25px}
+        .item:hover {
+            background-color: skyblue;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .item:active {color: black;}
+        .chosen {
+            background-color: skyblue;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Chefs 4 Me</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/chefs">Local Chefs</a></li>
+                    <li><a href="/inbox">Inbox</a></li>
+                    <li><a href="/preview">My Menu</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/logout">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="wrap" class="container">
+        <div class="col-md-4">
+            <div class="text-center">
+                <img alt="Chef {{chef.last_name}}" class="img-circle col-md-12 col-xs-12" src="/img?img_id={{chef.key.urlsafe()}}" style="margin-bottom:10px">
+                <h2>Chef {{chef.last_name}}</h2>
+            </div>
+            <div class="ratings row">
+                <p class="pull-right col-md-4">3 reviews</p>
+                <p class="col-md-8">
+                    <span class="glyphicon glyphicon-star"></span>
+                    <span class="glyphicon glyphicon-star"></span>
+                    <span class="glyphicon glyphicon-star"></span>
+                    <span class="glyphicon glyphicon-star"></span>
+                    <span class="glyphicon glyphicon-star-empty"></span>
+                    4.0 stars
+                </p>
+            </div>
+            <div>
+                <p>Culinary School: {{chef.school}}</p>
+                <p>{{chef.experience}} Year(s) of Experience as a Chef</p>
+                <p>{{chef.description}}</p>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <form enctype="multipart/form-data" id="order" method="post">
+                <div name="chef" value="{{chef.key.id()}}"></div>
+                <div class="thumbnail">
+                    <h3>How...</h3>
+                    <div id="how">
+                        <p>How would you like to order from Chef {{chef.last_name}}?</p>
+                        <p><input type="radio" name="how" value="day">Book Chef {{chef.last_name}} for the Day (${{chef.day}} for 8 hours)<br>
+                        <div id="day_purchase" class="hide">
+                            I would like
+                            <select id="purchase_options" name="day_purchase">
+                                <option value="chef">the chef to purchase the ingrediants.</option>
+                                <option value="me">to purchase the ingrediants myself.</option>
+                            </select>
+                        </div></p>
+                        <p><input type="radio" name="how" value="hour">Book Chef {{chef.last_name}} for 
+                        <select id="hours" name="hours">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                        </select>
+                        hours (${{chef.hour}} per hour)<br>
+                        <div id="hour_purchase" class="hide">
+                            I would like
+                            <select id="purchase_options" name="hour_purchase">
+                                <option value="chef">the chef to purchase the ingrediants.</option>
+                                <option value="me">to purchase the ingrediants myself.</option>
+                            </select>
+                        </div></p>
+                        <p><input type="radio" name="how" value="byitem">Order from the menu
+                        <div id="byitem" class="hide">
+                            I would like 
+                            <select id="item_opts" name="byitem">
+                                <option value="home">cooked at my home.</option>
+                                <option value="delivery">my food cooked and delivered.</option>
+                                <option value="teach">to learn to cook at my home.</option>
+                            </select>
+                        </div></p>
+                        <div class="text-center">
+                            <input class="btn btn-primary btn-md" type="button" id="next1" value="Continue">
+                        </div>
+                    </div>
+                </div>
+                <div class="thumbnail">
+                    <h3>What...</h3>
+                    <div id="what" style="display:none">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <h4>Select from the Chef's Menu</h4>
+                            </div>
+                            <div id="guest" class="hide">
+                                <div class="col-md-3">
+                                    Number of Guests: 
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" step="1" class="form-control" id="guests" name="guests" placeholder="0"> 
+                                </div>
+                            </div>
+                        </div>
+                        {% for item in items %}
+                            <div class="row item" id="{{item.key.id()}}" style="margin-bottom:10px">
+                                <div class="col-md-3">
+                                    <div class="text-center" style="margin:8px">
+                                        <img class="img-circle col-xs-12 col-md-12" src="/img?img_id={{item.key.urlsafe()}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <h4>{{item.title}}  <span class="price_serving" style="float:right">${{item.price}}</span></h4>
+                                    <h5>{{item.category}} Cuisine 
+                                        <span class="hide">Rating</span>
+                                        <span class="price_serving" style="float:right">Serves: {{item.serving}}</span>
+                                    </h5>
+                                    <p style="height:60px;overflow:auto">{{item.ingredients}}<p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="text-center">
+                            <input class="btn btn-primary btn-md" type="button" id="next2" value="Continue">
+                        </div>
+                    </div>
+                </div>
+                <div class="thumbnail">
+                <h3>When... and Where...</h3>
+                    <div id="when" style="display:none">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <strong>Date</strong>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group has-feedback">
+                                    <div class="input-group" id="date2">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        <input type="date" class="form-control" id="date" name="date">
+                                        <span class="glyphicon form-control-feedback" id="date1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <strong>Time</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group has-feedback">
+                                    <div class="input-group" id="time2">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                        <input type="time" class="form-control" id="time" name="time" value="18:00">
+                                        <span class="glyphicon form-control-feedback" id="time1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:13px">
+                            <div class="col-md-2">
+                                <strong>Phone</strong>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="input-group" id="phone2">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                                    <input type="tel" id="phone" class="form-control" name="phone" placeholder="xxx-xxx-xxxx">
+                                    <span class="glyphicon form-control-feedback" id="phone1"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="checkbox" id="use_phone" name="use_phone">Use Saved Phone Number
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <strong>Addresses</strong>
+                            </div>
+                            <div class="col-md-5">
+                                <select name="addresses" id="addresses" class="form-control">
+                                    <option disabled selected> -- select an address -- </option>
+                                    {% for address in user.addresses %}
+                                        <option>{{address.type}}</option>
+                                    {% endfor %}
+                                    <option>New Address</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4">
+                                <div class="form-group has-feedback">
+                                    <div id="title2">
+                                        <input type="text" id="title" class="form-control" name="title" placeholder="Address Title">
+                                        <span class="glyphicon form-control-feedback" id="title1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <strong>Street</strong>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="form-group has-feedback">
+                                    <div class="input-group" id="street2">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                        <input type="text" id="street" class="form-control" name="street" placeholder="Steet">
+                                        <span class="glyphicon form-control-feedback" id="street1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <strong>City</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group has-feedback">
+                                    <div id="city2">
+                                        <input type="text" id="city" class="form-control" name="city" placeholder="City">
+                                        <span class="glyphicon form-control-feedback" id="city1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <strong>State</strong>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group has-feedback">
+                                    <div id="state2">
+                                        <input type="text" id="state" class="form-control" name="state" placeholder="ST">
+                                        <span class="glyphicon form-control-feedback" id="state1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <strong>Zipcode</strong>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group has-feedback">
+                                    <div id="zipcode2">
+                                        <input type="text" id="zipcode" class="form-control" name="zipcode" placeholder="XXXXX">
+                                        <span class="glyphicon form-control-feedback" id="zipcode1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align:center">
+                            <input class="btn btn-primary btn-md" type="submit" value="Preview Order">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <p>© 2015 4 Me Services · <a href="#">Terms</a></p>
+        </div>
+    </div>
+<script>
+    $(function(){
+        $('input:radio[name="how"]').change(function() {
+            if ($(this).val()== 'byitem') {
+                $('#byitem').removeClass('hide')
+                $('#day_purchase').addClass('hide')
+                $('#hour_purchase').addClass('hide')
+                $('#guest').addClass('hide')
+                $('.price_serving').removeClass('hide')
+            } else if ($(this).val()== 'day') {
+                $('#byitem').addClass('hide')
+                $('#day_purchase').removeClass('hide')
+                $('#guest').removeClass('hide')
+                $('#hour_purchase').addClass('hide')
+                $('.price_serving').addClass('hide')
+            } else if ($(this).val()== 'hour') {
+                $('#byitem').addClass('hide')
+                $('#guest').removeClass('hide')
+                $('#day_purchase').addClass('hide')
+                $('#hour_purchase').removeClass('hide')
+                $('.price_serving').addClass('hide')
+            } else {
+                $('#byitem').addClass('hide')
+                $('#guest').addClass('hide')
+                $('#day_purchase').addClass('hide')
+                $('#hour_purchase').addClass('hide')
+            }   
+        });
+        $('#next1').on('click', function() {
+            if($('input:radio[name="how"]').is(':checked')) {
+                $('#how').slideUp();
+                $('#what').slideDown();}
+            else {alert('Please select an option.');}
+        });
+        $('.item').on('click', function() {
+            $(this).toggleClass('chosen');
+        });
+        $('#next2').on('click', function() {
+            if (($('#guests').val()<1) && ($('input[name="how"]:checked').val()!='byitem')){
+                alert('Please enter the number of guests.');}
+            else if ($('.chosen')[0]) {
+                $('.chosen').each(function() {
+                    var item = document.createElement('div')
+                    item.innerHTML = "<input type='text' name='item' value='"+this.id+"' class='hide'>";
+                    document.getElementById('what').appendChild(item);
+                });
+                $('#what').slideUp();
+                $('#when').slideDown();}
+            else {alert('Please select a menu item.');}
+        });
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear()+"-"+(month)+"-"+(day);
+        $('#date').val(today);
+        $('#use_phone').click(function() {
+            $('#phone').val('{{user.number}}');
+        });
+        $('#addresses').click(function() {
+            choice = $(this).val()
+            {% for address in user.addresses %}
+                if (choice == '{{address.type}}') {
+                    $('#title').val('{{address.type}}');
+                    $('#street').val('{{address.street}}');
+                    $('#city').val('{{address.city}}');
+                    $('#state').val('{{address.state}}');
+                    $('#zipcode').val('{{address.zipcode}}');}                    
+            {% endfor %}
+        });
+        $('#phone').on('input', function() {
+            var input=$(this);
+			var re = /^\+?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+			var is_phone=re.test(input.val());
+			if(is_phone){input.removeClass("invalid").addClass("valid");}
+			else{input.removeClass("valid").addClass("invalid");}
+        });
+        $('#street').on('input', function() {
+            var input=$(this);
+			var is_street=input.val();
+			if(is_street){input.removeClass("invalid").addClass("valid");}
+			else{input.removeClass("valid").addClass("invalid");}
+        });
+        $('#city').on('input', function() {
+            var input=$(this);
+			var is_city=input.val();
+			if(is_city){input.removeClass("invalid").addClass("valid");}
+			else{input.removeClass("valid").addClass("invalid");}
+        });
+        $('#state').on('input', function() {
+            var input=$(this);
+            var states = [
+                "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+                "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+                "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+                "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+                "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
+                "AS", "DC", "FM", "GU", "MH", "MP", "PR", "PW", "VI"];
+            is_state = $.inArray(input.val().toUpperCase(), states);
+			if(is_state!=-1){input.removeClass("invalid").addClass("valid");}
+			else{input.removeClass("valid").addClass("invalid");}
+		});
+        $('#zipcode').on('input', function() {
+			var input=$(this);
+			var re = /^\+?([0-9]{5})$/;
+			var is_zip=re.test(input.val());
+			if(is_zip){input.removeClass("invalid").addClass("valid");}
+			else{input.removeClass("valid").addClass("invalid");}
+		});
+        $("#order").submit(function(){
+            if ($('.invalid')[0]){
+                event.preventDefault();
+                alert("Please correct all the fields boxed in red to submit.")} 
+            else {document.getElementById("#order").submit();}
+        });
+    });
+</script>
+</body>

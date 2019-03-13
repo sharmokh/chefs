@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chefs 4 Me</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+    <script src="/js/jquery.js" type="text/javascript" ></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/ie10-viewport-bug-workaround.js"></script>
+    <style>
+        body {padding-top: 75px}
+        .thumbnail {padding: 25px}
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Chefs 4 Me</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/chefs">Local Chefs</a></li>
+                    <li><a href="/inbox">Inbox</a></li>
+                    <li><a href="/preview">My Menu</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/logout">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="wrap" class="container">
+        <div class="row row-offcanvas row-offcanvas-right">
+            <div class="col-xs-12 col-sm-9" data-pg-collapsed>
+                <p class="pull-right visible-xs" style="z-index:2; position:relative">
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Cuisines</button>
+                </p>
+                <div class="row">
+                    <form id="search" class="col-md-12" method="post">
+                        <div class="current">Chefs around the current zip code: {{zipcode}}  
+                            <span id="change"><a>(Change Location)</a></span>
+                            <input name="zipcode" value="{{zipcode}}" class="hide">
+                        </div>
+                        <div id="new_location" style="display:none">
+                            <div class="col-md-9">
+                                <input type="text" name="address" class="form-control" placeholder="Enter full address or just zipcode">
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <input class="btn btn-md btn-primary" type="submit" id="submit" value="Change Location">
+                            </div>
+                        </div>
+                    </form>
+                    <h4>{{message}}</h4>
+                </div>
+                <hr>
+                <div class="row">
+                    <ol class="list-unstyled" id="grid">
+                        {% for chef in chefs %}
+                        <li class="{% for cuisine in chef.cuisines %}{{cuisine}} {% endfor %} col-xs-6 col-md-3">
+                            <a href="/order?chef={{chef.key.id()}}">
+                            <div class="text-center">
+                                <img alt="Chef {{chef.last_name}}" class="img-circle col-md-12 col-xs-12" src="/img?img_id={{chef.key.urlsafe()}}">
+                                <strong>Chef {{chef.last_name}}</strong>
+                            </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation" data-pg-collapsed>
+                <ol id="categories" class="list-group list-unstyled">
+                    <li class="list-group-item active">All Categories</li>
+                    <li class="list-group-item">African</li>
+                    <li class="list-group-item">American</li>
+                    <li class="list-group-item">Asain</li>
+                    <li class="list-group-item">Baking</li>
+                    <li class="list-group-item">Carribean</li>
+                    <li class="list-group-item">European</li>
+                    <li class="list-group-item">Fusion</li>
+                    <li class="list-group-item">Gluton-Free</li>
+                    <li class="list-group-item">Kolsher</li>
+                    <li class="list-group-item">Indian</li>
+                    <li class="list-group-item">Italian</li>
+                    <li class="list-group-item">Mediterranean</li>
+                    <li class="list-group-item">Mexican</li>
+                    <li class="list-group-item">Paleo</li>
+                    <li class="list-group-item">South American</li>
+                    <li class="list-group-item">Vegan</li>
+                    <li class="list-group-item">Vegetarian</li>
+                </ol>
+            </div>
+        </div>    
+    </div>
+    <div id="footer">
+        <div class="container">
+            <p>© 2015 4 Me Services · <a href="#">Terms</a></p>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            $('#change').click(function(){
+                $('#new_location').slideToggle() 
+            });
+            $('[data-toggle="offcanvas"]').click(function () {
+                $('.row-offcanvas').toggleClass('active')
+            });
+            $('#categories li').click(function() {
+                var category = $(this).html();
+                $('#categories li').removeClass('active');
+                $(this).addClass('active');
+                $('ol#grid li').hide();
+                $('ol#grid li').each(function(){
+                    if ($(this).hasClass(category)){
+                        $(this).fadeIn(1200);};
+                });
+                if (category == 'All Categories') {
+                    $('ol#grid li').fadeIn(1200);};
+            });
+        });
+    </script>
+</body>

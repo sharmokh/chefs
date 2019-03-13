@@ -1,0 +1,3 @@
++ User Object created before Login Object verified
++ Local Chefs Error if Zipcode no address in User Profile
++ My Menu Error if not a Chef

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chefs 4 Me</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+    <script src="/js/jquery.js" type="text/javascript" ></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+    <style>
+        body {padding-top: 75px}
+        .thumbnail {padding: 25px}
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Chefs 4 Me</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/chefs">Local Chefs</a></li>
+                    <li><a href="/inbox">Inbox</a></li>
+                    <li class="dropdown active">
+                        <a href="/preview" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">My Menu<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/preview">Preview</a></li>
+                            <li><a href="/chef">Chef Profile</a></li>
+                            <li><a href="/menu">Edit Menu</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/logout">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="wrap" class="container">
+        <div class="row thumbnail">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <img class="img-circle col-md-12 col-xs-12" src="/img?img_id={{chef.key.urlsafe()}}" alt="Profile Picture">
+                </div>
+                <div class="ratings row">
+                    <p class="pull-right col-md-4">3 reviews</p>
+                    <p class="col-md-8">
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        4.0 stars
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h2>Chef {{chef.last_name}}</h2>
+                <p>{{chef.description}}</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        Culinary School: {{chef.school}}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-12">{{chef.experience}} Year(s) of Experience as a Chef</div>
+                        <div class="col-md-6 col-xs-6">Daily Rate: ${{chef.day}}</div>
+                        <div class="col-md-6 col-xs-6">Hourly Rate: ${{chef.hour}}</div>
+                    </div>
+                </div>
+                <div class="well hide">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star-empty"></span>
+                            Anonymous
+                            <span class="pull-right">10 days ago</span>
+                            <p>This product was great in terms of quality. I would definitely buy another!</p>
+                        </div>
+                    </div>
+                    <hr>            
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h2 class="text-center">Menu</h2>
+                {% for item in items %}
+                <div class="row" id="{{item.key.id()}}">
+                    <div class="col-md-3">
+                        <div class="text-center" style="margin:8px">
+                            <img class="img-circle col-xs-12 col-md-12" src="/img?img_id={{item.key.urlsafe()}}">
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <h4>{{item.title}}  <span style="float:right">${{item.price}}</span></h4>
+                        <h5>{{item.category}} Cuisine 
+                            <span class="hide">Rating</span>
+                            <span style="float:right">Serves: {{item.serving}}</span>
+                        </h5>
+                        <p style="height:60px;overflow:auto">{{item.ingredients}}<p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <p>© 2015 4 Me Services · <a href="#">Terms</a></p>
+        </div>
+    </div>
+</body>

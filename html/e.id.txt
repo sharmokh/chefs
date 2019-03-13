@@ -1,0 +1,10 @@
+Please verify {{first_name}} ID.
+
+{{first_name}} {{last_name}}
+{{dob}}
+
+{{photo}}
+
+{{photo_id}}
+
+Thank you!

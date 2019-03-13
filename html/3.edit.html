@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chefs 4 Me</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+    <script src="/js/jquery.js" type="text/javascript" ></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+    <style>
+        body {padding-top: 75px}
+        .thumbnail {padding: 25px}
+        #delete {
+            color: black;
+            margin:-40px -15px
+        }
+        #delete:hover {
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Chefs 4 Me</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/chefs">Local Chefs</a></li>
+                    <li><a href="/inbox">Inbox</a></li>
+                    <li class="dropdown active">
+                        <a href="/preview" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">My Menu<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/preview">Preview</a></li>
+                            <li><a href="/chef">Chef Profile</a></li>
+                            <li><a href="/menu">Edit Menu</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/logout">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="wrap" class="container">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <form enctype="multipart/form-data" id="menu" method="post">
+                <div class="text-center">
+                    <h2>My Menu</h2>
+                </div>
+                {% if items %}
+                    {% for item in items %}
+                    <div class="row thumbnail" id="item">
+                        <a id='delete' class="pull-right" title="Would you like to delete the menu item?"><h3><strong>x</strong></h3></a>
+                        <input type="hidden" name="item_id" value="{{item.key.id()}}">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <img class="img-circle col-md-12 col-xs-12" src="/img?img_id={{item.key.urlsafe()}}">
+                            </div>
+                            <div>
+                                <strong>Upload Photo</strong>
+                                <input type="file" id="photo" class="form-control" name="photo" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <strong>Title</strong>
+                                </div>
+                                <div class="form-group has-feedback col-md-6">
+                                    <div id="title2">
+                                        <input type="text" class="form-control" id="title" name="title" placeholder="Enter Name of Menu Item" value="{{item.title}}">
+                                        <span class="glyphicon form-control-feedback" id="title1"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-1"></div>
+                                <div class="col-md-1">
+                                    <strong>Price</strong>
+                                </div>
+                                <div class="form-group has-feedback col-md-3">
+                                    <div id="price2">
+                                        <input type="text" class="form-control" id="price" name="price" value="{{item.price}}">
+                                        <span class="glyphicon form-control-feedback" id="price1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <strong>Category</strong>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group has-feedback">
+                                        <div id="category2">
+                                            <input list="cat" id="category" class="form-control" name="category" value="{{item.category}}">
+                                            <datalist id="cat"> 
+                                                <option disabled selected> - select - </option>
+                                                <option value="American">American</option>
+                                                <option value="Mexican">Mexican</option>
+                                                <option value="South American">South American</option>
+                                                <option value="Carribean">Carribean</option>
+                                                <option value="European">European</option>
+                                                <option value="Italian">Italian</option>
+                                                <option value="African">African</option>
+                                                <option value="Mediterranean">Mediterranean</option>
+                                                <option value="Asian">Asian</option>
+                                                <option value="Indian">Indian</option>
+                                                <option value="Fusion">Fusion</option>
+                                            </datalist>
+                                            <span class="glyphicon form-control-feedback" id="category1"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1"></div>
+                                <div class="col-md-1">
+                                    <strong>Serves</strong>
+                                </div>
+                                <div class="form-group has-feedback col-md-3">
+                                    <div id="serving2">
+                                        <input type="text" class="form-control" id="serving" name="serving" value="{{item.serving}}">
+                                        <span class="glyphicon form-control-feedback" id="serving1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-12">Ingridients or discription for customers to read.</p>
+                                <div class="form-group has-feedback col-md-12">
+                                    <div id="ingredients2">
+                                        <textarea class="form-control" id="ingredients" name="ingredients" rows="3" style="resize:none">{{item.ingredients}}</textarea>
+                                        <span class="glyphicon form-control-feedback" id="ingredients1"></span>
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="row thumbnail" id="item">
+                        <a id='delete' class="pull-right" title="Would you like to delete the menu item?"><h3><strong>x</strong></h3></a>
+                        <input type="hidden" name="item_id">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <img class="img-circle col-md-12" src="../img/NoPhoto.png">
+                            </div>
+                            <input type="file" style="padding-top:25px; padding-bottom:25px" id="photo" name="photo" accept="image/*">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <strong>Title</strong>
+                                </div>
+                                <div class="form-group has-feedback col-md-6">
+                                    <div id="title2">
+                                        <input type="text" class="form-control" id="title" name="title" placeholder="Enter Name of Menu Item">
+                                        <span class="glyphicon form-control-feedback" id="title1"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-1"></div>
+                                <div class="col-md-1">
+                                    <strong>Price</strong>
+                                </div>
+                                <div class="form-group has-feedback col-md-3">
+                                    <div id="price2">
+                                        <input type="text" class="form-control" id="price" name="price">
+                                        <span class="glyphicon form-control-feedback" id="price1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <strong>Category</strong>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group has-feedback">
+                                        <div id="category2">
+                                            <input list="cat" id="category" class="form-control" name="category">
+                                            <datalist id="cat"> 
+                                                <option disabled selected> - select - </option>
+                                                <option value="American">American</option>
+                                                <option value="Mexican">Mexican</option>
+                                                <option value="South American">South American</option>
+                                                <option value="Carribean">Carribean</option>
+                                                <option value="European">European</option>
+                                                <option value="Italian">Italian</option>
+                                                <option value="African">African</option>
+                                                <option value="Mediterranean">Mediterranean</option>
+                                                <option value="Asian">Asian</option>
+                                                <option value="Indian">Indian</option>
+                                                <option value="Fusion">Fusion</option>
+                                            </datalist>
+                                            <span class="glyphicon form-control-feedback" id="category1"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1"></div>
+                                <div class="col-md-1">
+                                    <strong>Serves</strong>
+                                </div>
+                                <div class="form-group has-feedback col-md-3">
+                                    <div id="serving2">
+                                        <input type="text" class="form-control" id="serving" name="serving">
+                                        <span class="glyphicon form-control-feedback" id="serving1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-12">Ingridients or discription for customers to read.</p>
+                                <div class="form-group has-feedback col-md-12">
+                                    <div id="ingredients2">
+                                        <textarea class="form-control" id="ingredients" name="ingredients" rows="3" style="resize:none"></textarea>
+                                        <span class="glyphicon form-control-feedback" id="ingredients1"></span>
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <input type="hidden" id="deleted" name="deleted">
+                <input class="btn btn-sm btn-info" type="button" id="add" value="+ Add Item">
+                <div class="text-center"><input class="btn btn-lg btn-primary" type="submit" id="submit" value="Update Menu"></div>
+            </form>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <p>© 2015 4 Me Services · <a href="#">Terms</a></p>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            $('#add').on('click', function() {
+                var row = $('#item:first').clone()
+                row.find('[type="hidden"]').val('')
+                row.find('[type="file"]').val('')
+                row.find('[type="text"]').val('')
+                row.find('[type="number"]').val('')
+                row.find('[list="cat"]').val('')
+                row.find('textarea').val('')
+                row.find('.photo').attr('src', "../img/NoPhoto.png")
+                row.removeAttr('style')
+                $('#add').before(row)
+            });
+            $('body').on("click", '#delete', function(e) {
+                var delete_item = $(this).parent()
+                del = confirm('Do you want to delete '+delete_item.find('#title').val()+'?')
+                if (del == true){
+                    $('#deleted').val($('#deleted').val()+','+delete_item.find('input[type="hidden"]').val())
+                    delete_item.slideUp().remove()
+                }
+            });
+        });
+    </script> 
+</body>
